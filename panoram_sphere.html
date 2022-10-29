@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<head>
+</head>
+<body>
+	<div id="sphere"></div>
+		
+	
+	<script src="./js/three.min.js"></script>
+	<script src="./js/OrbitControls.js"></script>	
+	<script src="./js/Detector.js"></script>		
+	<script>
+
+		var webglEl = document.getElementById('sphere');
+
+		var width  = window.innerWidth,
+			height = window.innerHeight;
+
+		var scene = new THREE.Scene();
+
+		var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+		camera.position.x = 1;
+	
+
+		var renderer = Detector.webgl ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
+		renderer.setSize(width, height);
+
+		var sphere = new THREE.Mesh(
+			new THREE.SphereGeometry(200, 20, 20),
+			new THREE.MeshBasicMaterial({
+				map: THREE.ImageUtils.loadTexture('./img/panorama.jpg')
+			})
+		);
+		sphere.scale.x = -1;
+		scene.add(sphere);
+
+		var controls = new THREE.OrbitControls(camera);
+		controls.noPan = true; // Включає або відключає панорамування камерою.
+		controls.noZoom = true; // Включає або відключає масштабування камери.
+		controls.autoRotate = true; // Для автоматичного обертання навколо об'єкта 
+									// встановіть значення даного властивості як true. 
+									// Якщо ця властивість включено, в циклі анімації потрібно викликати метод update.
+		controls.autoRotateSpeed = 0.5; // Властивість визначає швидкість обертання камери навколо об'єкта, 
+		                                // якщо властивість autoRotate встановлено як true. Значення за замовчуванням дорівнює 2.0, 
+										// що дорівнює 30 секундам на один оборот при 60 кадрах в секунду.
+                                        // Якщо властивість autoRotate включено, в циклі анімації потрібно викликати метод update.
+
+		webglEl.appendChild(renderer.domElement);
+
+		render();
+
+		function render() {
+			controls.update();
+			requestAnimationFrame(render);
+			renderer.render(scene, camera);
+		}
+
+		
+
+	</script>
+</body>
+</html>
